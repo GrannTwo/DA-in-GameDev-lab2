@@ -49,13 +49,51 @@
 
 - Создать новый проект на Unity, который будет получать данные из google-таблицы, в которую были записаны данные в предыдущем пункте.
 
+```
+  IEnumerator GoogleSheets()
+    {
+        UnityWebRequest curentResp = UnityWebRequest.Get("https://sheets.googleapis.com/v4/spreadsheets/1827q_kkXgf_U9qZCRxdf8CTMH1rLUfce98Rp5GrjAOo/values/%D0%9B%D0%B8%D1%81%D1%821?key=AIzaSyBST2J6EQpXlHtgYrZYRrMwtvAfBycsoXY");
+        yield return curentResp.SendWebRequest();
+        string rawResp = curentResp.downloadHandler.text;
+        var rawJson = JSON.Parse(rawResp);
+        foreach (var itemRawJson in rawJson["values"])
+        {
+            var parseJson = JSON.Parse(itemRawJson.ToString());
+            var selectRow = parseJson[0].AsStringList;
+            dataSet.Add(("Mon_" + selectRow[0]), float.Parse(selectRow[2]));
+        }
+    }
+
+```
+- Написать функционал на Unity, в котором будет воспризводиться аудио-файл в зависимости от значения данных из таблицы.
+![изображение](https://github.com/GrannTwo/DA-in-GameDev-lab2/assets/138350235/3b77a984-1008-478f-aa3a-387cbdcd28ee)
 ## Задание 2
-### В разделе "Ход работы" пошагово выполнить каждый пункт с описанием и примером реализации задачи по теме лабораторной работы
+### Реализовать запись в Google-таблицу набора данных, полученных с помощью линейной регрессии из лабораторной работы № 1. 
+![изображение](https://github.com/GrannTwo/DA-in-GameDev-lab2/assets/138350235/e9689f0d-9018-41fa-81f9-dd0ef04dad25)
+![изображение](https://github.com/GrannTwo/DA-in-GameDev-lab2/assets/138350235/81248d49-ce75-4320-b0c3-46855453a65c)
 
 
 ## Задание 3
-### Изучить код на Python и ответить на вопросы:
+### Самостоятельно разработать сценарий воспроизведения звукового сопровождения в Unity в зависимости от изменения считанных данных в задании 2.
+```
+        if (dataSet["Mon_" + i.ToString()] <= 8 & statusStart == false & i != dataSet.Count)
+        {
+            StartCoroutine(PlaySelectAudioGood());
+            Debug.Log(dataSet["Mon_" + i.ToString()]);
+        }
 
+        if (dataSet["Mon_" + i.ToString()] > 20 & dataSet["Mon_" + i.ToString()] < 30 & statusStart == false & i != dataSet.Count)
+        {
+            StartCoroutine(PlaySelectAudioNormal());
+            Debug.Log(dataSet["Mon_" + i.ToString()]);
+        }
 
+        if (dataSet["Mon_" + i.ToString()] >= 80 & statusStart == false & i != dataSet.Count)
+        {
+            StartCoroutine(PlaySelectAudioBad());
+            Debug.Log(dataSet["Mon_" + i.ToString()]);
+        }
+```
+## Выводы
 В ходе выполнения лабораторной работы были получены навыки работы с программными средствами для организции передачи данных между инструментами google, Python и Unity.
 
